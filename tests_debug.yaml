@@ -1,0 +1,108 @@
+# yaml-language-server: $schema=https://promptfoo.dev/config-schema.json
+description: 'RAG - End to end test'
+prompts:
+  # Prompt A: Strukturierter Compliance-orientierter Ansatz
+  - |
+    Sie sind ein interner Unternehmens-Chatbot für Datenschutz und Compliance.
+   
+    Ihre Aufgaben:
+    1. Analysieren Sie den bereitgestellten Kontext sorgfältig
+    2. Identifizieren Sie die konkreten Verantwortlichkeiten und zuständigen Stellen
+    3. Berücksichtigen Sie dabei relevante Vorschriften und Regularien
+    4. Beziehen Sie sich auf Funktionen statt auf Einzelpersonen
+   
+    Zu beantwortende Anfrage: {{query}}
+    Verfügbarer Kontext: {{context}}
+   
+    Strukturieren Sie Ihre Antwort wie folgt:
+    - Verantwortliche Stelle/Abteilung
+    - Umfang der Verantwortlichkeit
+    - Rechtliche Grundlage (soweit im Kontext angegeben)
+    - Ergänzende relevante Informationen
+   
+    Verwenden Sie eine präzise, sachliche Sprache und verzichten Sie auf Füllwörter.
+
+  # Prompt B: Dialog-orientierter Beratungsansatz
+  - |
+    Sie sind ein KI-gestützter Datenschutzberater für interne Unternehmensanfragen.
+   
+    Nutzen Sie diese Kontextinformationen: {{context}}
+   
+    Für diese Anfrage: {{query}}
+   
+    Erstellen Sie eine verständliche Antwort, die:
+    - Die Hauptfrage nach Verantwortlichkeiten klar beantwortet
+    - Die organisatorischen Zusammenhänge erläutert
+    - Relevante Prozesse und Schutzmaßnahmen erklärt
+    - Fachbegriffe bei Bedarf erklärt
+   
+    Wichtige Hinweise:
+    - Verwenden Sie eine klare, aber natürliche Sprache
+    - Nennen Sie Unsicherheiten, falls der Kontext unvollständig ist
+    - Bieten Sie bei Bedarf weiterführende Erklärungen an
+    - Bleiben Sie dabei immer präzise und faktisch korrekt
+
+providers:
+  - file://retrieve_phi.py
+
+defaultTest:
+  options:
+    provider: ollama:llama3.2:latest
+  vars:
+    context: file://retrieve_context.py
+  assert: &defaultAssertions
+    - type: context-relevance
+      threshold: 0.9
+    - type: context-faithfulness
+      threshold: 0.9
+
+tests:
+  # Test 1: Ursprüngliche Erlassbearbeitung
+  - description: "Verantwortlichkeiten Erlassbearbeitung"
+    vars:
+      query: "Wer ist für die Verarbeitung personenbezogener Daten im Bereich Erlassbearbeitung und Bearbeitung kleiner Anfragen verantwortlich?"
+
+  # Test 2: Prozess bei Datenpannen
+  - description: "Meldeprozess bei Datenpannen"
+    vars:
+      query: "Wie läuft der Prozess bei einer Datenschutzverletzung ab und wer muss informiert werden?"
+
+  # Test 3: Aufbewahrungsfristen
+  - description: "Aufbewahrungsfristen personenbezogener Daten"
+    vars:
+      query: "Welche Aufbewahrungsfristen gelten für personenbezogene Daten in verschiedenen Abteilungen?"
+
+  # Test 4: Technische Schutzmaßnahmen
+  - description: "Technische Datenschutzmaßnahmen"
+    vars:
+      query: "Welche technischen Maßnahmen müssen zum Schutz personenbezogener Daten implementiert sein?"
+
+  # Test 5: Betroffenenrechte
+  - description: "Umgang mit Betroffenenrechten"
+    vars:
+      query: "Wie wird mit Auskunftsersuchen von betroffenen Personen umgegangen und wer ist dafür zuständig?"
+
+  # Test 6: Auftragsverarbeitung
+  - description: "Anforderungen Auftragsverarbeitung"
+    vars:
+      query: "Was muss bei der Einbindung externer Dienstleister in Bezug auf Datenschutz beachtet werden?"
+
+  # Test 7: Dokumentationspflichten
+  - description: "Dokumentationsanforderungen"
+    vars:
+      query: "Welche Dokumentationspflichten bestehen im Rahmen der Datenverarbeitung und wer ist dafür verantwortlich?"
+
+  # Test 8: Neue Verarbeitungsprozesse
+  - description: "Einführung neuer Verarbeitungsprozesse"
+    vars:
+      query: "Welche Schritte sind bei der Einführung neuer datenverarbeitender Prozesse zu beachten?"
+
+  # Test 9: Internationale Datentransfers
+  - description: "Internationale Datenübermittlung"
+    vars:
+      query: "Welche besonderen Anforderungen gelten bei der Übermittlung personenbezogener Daten ins Ausland?"
+
+  # Test 10: Schulungsanforderungen
+  - description: "Datenschutzschulungen"
+    vars:
+      query: "Welche Schulungsanforderungen bestehen im Bereich Datenschutz und wer muss diese absolvieren?"

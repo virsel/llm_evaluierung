@@ -1,0 +1,97 @@
+# yaml-language-server: $schema=https://promptfoo.dev/config-schema.json
+description: 'RAG - End to end test für Datenschutz und Compliance Chatbot'
+
+
+# Global provider configuration
+providers:
+  - file://retrieve_phi.py
+  - file://retrieve_qwen.py
+
+defaultTest:
+  options:
+    provider:
+      text: ollama:llama3.2:latest
+      embedding: ollama:embeddings:mxbai-embed-large
+  assert:
+    - type: answer-relevance
+      threshold: 0.9
+
+
+prompts:
+  - &compliance_prompt |
+    Sie sind ein interner Unternehmens-Chatbot für Datenschutz und Compliance.
+   
+    Ihre Aufgaben:
+    1. Analysieren Sie den bereitgestellten Kontext sorgfältig
+    2. Identifizieren Sie die konkreten Verantwortlichkeiten und zuständigen Stellen
+    3. Berücksichtigen Sie dabei relevante Vorschriften und Regularien
+    4. Beziehen Sie sich auf Funktionen statt auf Einzelpersonen
+   
+    Zu beantwortende Anfrage: {{query}}
+    Verfügbarer Kontext: {{context}}
+   
+    Strukturieren Sie Ihre Antwort wie folgt:
+    - Verantwortliche Stelle/Abteilung
+    - Umfang der Verantwortlichkeit
+    - Rechtliche Grundlage (soweit im Kontext angegeben)
+    - Ergänzende relevante Informationen
+   
+    Verwenden Sie eine präzise, sachliche Sprache und verzichten Sie auf Füllwörter.
+
+tests:
+  # Test Case 1: Erlassbearbeitung
+  - description: "Verantwortlichkeiten bei Erlassbearbeitung"
+    vars:
+      query: "Wer ist für die Verarbeitung personenbezogener Daten im Bereich Erlassbearbeitung und Bearbeitung kleiner Anfragen verantwortlich?"
+    assert:
+      - type: factuality
+        value: "Die Fachabteilung ist für die Verarbeitung personenbezogener Daten im Bereich Erlassbearbeitung und Bearbeitung kleiner Anfragen verantwortlich"
+      - type: factuality
+        value: "Die Verarbeitung erfolgt gemäß den Datenschutzrichtlinien"
+      - type: similar
+        value: "Die zuständige Fachabteilung trägt die Verantwortung für die Verarbeitung der personenbezogenen Daten bei Erlassbearbeitung und kleinen Anfragen"
+        threshold: 0.5
+
+  # Test Case 2: Datenschutzbeauftragter
+  - description: "Aufgaben des Datenschutzbeauftragten"
+    vars:
+      query: "Welche Rolle spielt der Datenschutzbeauftragte bei der Verarbeitung personenbezogener Daten?"
+    assert:
+      - type: factuality
+        value: "Der Datenschutzbeauftragte überwacht die Einhaltung der Datenschutzvorschriften"
+      - type: similar
+        value: "Der Datenschutzbeauftragte berät und kontrolliert in Datenschutzfragen"
+        threshold: 0.7
+
+  # Test Case 3: IT-Sicherheit
+  - description: "Verantwortlichkeiten IT-Sicherheit"
+    vars:
+      query: "Wer ist für die technischen Sicherheitsmaßnahmen bei der Datenverarbeitung zuständig?"
+    assert:
+      - type: factuality
+        value: "Die IT-Abteilung ist für die technische Umsetzung der Sicherheitsmaßnahmen verantwortlich"
+      - type: similar
+        value: "Die IT-Abteilung implementiert und wartet die technischen Schutzmaßnahmen"
+        threshold: 0.6
+
+  # Test Case 4: Dokumentationspflichten
+  - description: "Dokumentation der Datenverarbeitung"
+    vars:
+      query: "Welche Abteilung ist für die Dokumentation der Datenverarbeitungsprozesse verantwortlich?"
+    assert:
+      - type: factuality
+        value: "Jede verarbeitende Stelle muss ihre Datenverarbeitungsprozesse dokumentieren"
+      - type: similar
+        value: "Die Dokumentationspflicht liegt bei den datenverarbeitenden Abteilungen"
+        threshold: 0.7
+
+  # Test Case 5: Datenschutzverletzungen
+  - description: "Meldung von Datenschutzverletzungen"
+    vars:
+      query: "An wen müssen Datenschutzverletzungen gemeldet werden?"
+    assert:
+      - type: factuality
+        value: "Datenschutzverletzungen müssen unverzüglich dem Datenschutzbeauftragten gemeldet werden"
+      - type: similar
+        value: "Der Datenschutzbeauftragte ist bei Datenschutzverletzungen zu informieren"
+        threshold: 0.8

@@ -1,0 +1,72 @@
+# yaml-language-server: $schema=https://promptfoo.dev/config-schema.json
+description: 'RAG - End to end test'
+
+prompts:
+  # Prompt A: Strukturierter Compliance-orientierter Ansatz
+  - |
+    Sie sind ein interner Unternehmens-Chatbot für Datenschutz und Compliance.
+    
+    Ihre Aufgaben:
+    1. Analysieren Sie den bereitgestellten Kontext sorgfältig
+    2. Identifizieren Sie die konkreten Verantwortlichkeiten und zuständigen Stellen
+    3. Berücksichtigen Sie dabei relevante Vorschriften und Regularien
+    4. Beziehen Sie sich auf Funktionen statt auf Einzelpersonen
+    
+    Zu beantwortende Anfrage: {{query}}
+    Verfügbarer Kontext: {{context}}
+    
+    Strukturieren Sie Ihre Antwort wie folgt:
+    - Verantwortliche Stelle/Abteilung
+    - Umfang der Verantwortlichkeit
+    - Rechtliche Grundlage (soweit im Kontext angegeben)
+    - Ergänzende relevante Informationen
+    
+    Verwenden Sie eine präzise, sachliche Sprache und verzichten Sie auf Füllwörter.
+
+  # Prompt B: Dialog-orientierter Beratungsansatz
+  - |
+    Sie sind ein KI-gestützter Datenschutzberater für interne Unternehmensanfragen.
+    
+    Nutzen Sie diese Kontextinformationen: {{context}}
+    
+    Für diese Anfrage: {{query}}
+    
+    Erstellen Sie eine verständliche Antwort, die:
+    - Die Hauptfrage nach Verantwortlichkeiten klar beantwortet
+    - Die organisatorischen Zusammenhänge erläutert
+    - Relevante Prozesse und Schutzmaßnahmen erklärt
+    - Fachbegriffe bei Bedarf erklärt
+    
+    Wichtige Hinweise:
+    - Verwenden Sie eine klare, aber natürliche Sprache
+    - Nennen Sie Unsicherheiten, falls der Kontext unvollständig ist
+    - Bieten Sie bei Bedarf weiterführende Erklärungen an
+    - Bleiben Sie dabei immer präzise und faktisch korrekt
+
+providers:
+  - file://retrieve_phi.py
+
+defaultTest:
+  options:
+    provider: ollama:llama3.2:latest
+  vars:
+    context: file://retrieve_context.py 
+  assert:
+    - type: context-faithfulness # ensure that LLM output uses the context
+      threshold: 0.9
+
+tests:
+  - vars:
+      query: "Wer ist für die Verarbeitung personenbezogener Daten im Bereich Erlassbearbeitung und Bearbeitung kleiner Anfragen verantwortlich?"
+  # - vars:
+  #     query: "Welche Abteilung ist verantwortlich für die Einhaltung der DSGVO-Vorschriften bei der Mitarbeiterüberwachung?"
+  # - vars:
+  #     query: "Wer ist für die Verwaltung und den Schutz von Kundendaten in der Abteilung Marketing zuständig?"
+  # - vars:
+  #     query: "Welche Stellen sind verantwortlich für die Bearbeitung von Datenschutzverletzungen im Unternehmen?"
+  # - vars:
+  #     query: "Wer kümmert sich um die Einhaltung der datenschutzrechtlichen Anforderungen im HR-Bereich?"
+  # - vars:
+  #     query: "Wer ist für die Verwaltung und den Zugriff auf personenbezogene Daten in der IT-Abteilung verantwortlich?"
+  # - vars:
+  #     query: "Welche Abteilungen sind für die Schulung und Sensibilisierung der Mitarbeiter im Bereich Datenschutz zuständig?"

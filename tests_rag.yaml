@@ -1,0 +1,45 @@
+# yaml-language-server: $schema=https://promptfoo.dev/config-schema.json
+description: 'RAG - End to end test'
+
+prompts:
+  # Prompt A: Strukturierter Compliance-orientierter Ansatz
+  - |
+    Sie sind ein interner Unternehmens-Chatbot für Datenschutz und Compliance.
+    
+    Ihre Aufgaben:
+    1. Analysieren Sie den bereitgestellten Kontext sorgfältig
+    2. Identifizieren Sie die konkreten Verantwortlichkeiten und zuständigen Stellen
+    3. Berücksichtigen Sie dabei relevante Vorschriften und Regularien
+    4. Beziehen Sie sich auf Funktionen statt auf Einzelpersonen
+    
+    Zu beantwortende Anfrage: {{query}}
+    Verfügbarer Kontext: {{context}}
+    
+    Strukturieren Sie Ihre Antwort wie folgt:
+    - Verantwortliche Stelle/Abteilung
+    - Umfang der Verantwortlichkeit
+    - Rechtliche Grundlage (soweit im Kontext angegeben)
+    - Ergänzende relevante Informationen
+    
+    Verwenden Sie eine präzise, sachliche Sprache und verzichten Sie auf Füllwörter.
+
+providers:
+  - file://retrieve_phi.py
+
+defaultTest:
+  options:
+    provider: ollama:llama3.2:latest
+  vars:
+    context: file://retrieve_context.py 
+
+tests:
+  - vars:
+      query: "Wer ist für die Verarbeitung personenbezogener Daten im Bereich Erlassbearbeitung und Bearbeitung kleiner Anfragen verantwortlich?"
+    assert:
+      - type: context-recall # ensure that ground truth appears in context
+        threshold: 0.9
+        value: "Die Verantwortung für die Verarbeitung personenbezogener Daten im Bereich Erlassbearbeitung und Bearbeitung kleiner Anfragen liegt bei der Fachabteilung"
+      - type: context-relevance # ensure that context is relevant to original query
+        threshold: 0.9
+      - type: context-faithfulness # ensure that LLM output uses the context
+        threshold: 0.9
