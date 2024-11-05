@@ -1,0 +1,62 @@
+# yaml-language-server: $schema=https://promptfoo.dev/config-schema.json
+description: 'RAG - End to end test für Datenschutz und Compliance Chatbot'
+
+
+# Global provider configuration
+providers:
+  - file://retrieve_phi.py
+
+defaultTest:
+  options:
+    provider:
+      text: ollama:llama3.2:latest
+      embedding: ollama:embeddings:mxbai-embed-large
+  # vars:
+  #   context: file://retrieve_context_lazy.py 
+  assert:
+    - type: answer-relevance # ensure that LLM output is related to original query
+      threshold: 0.9
+    - type: similar
+      value: "{{fact}}"
+      threshold: 0.7
+
+
+prompts:
+ - &basic_qanda |
+   Sie sind ein Assistent für Fragen und Antworten.
+   
+   Kontext: {{context}}
+   Frage: {{query}}
+   
+   Beantworten Sie die Frage präzise basierend auf dem gegebenen Kontext.
+   Verwenden Sie nur Informationen, die im Kontext enthalten sind.
+
+ - &detailed_qanda |
+   Sie sind ein präziser Informationsassistent.
+   
+   Gegeben ist folgender Kontext:
+   {{context}}
+   
+   Bitte beantworten Sie diese Frage:
+   {{query}}
+   
+   Anforderungen:
+   - Antworten Sie direkt und knapp
+   - Nutzen Sie nur Fakten aus dem Kontext
+   - Keine Spekulationen oder externes Wissen
+
+ - &academic_qanda |
+   Als akademischer Assistent analysieren Sie den folgenden Text:
+   
+   Text zur Analyse:
+   {{context}}
+   
+   Zu beantwortende Frage:
+   {{query}}
+   
+   Richtlinien:
+   - Zitieren Sie relevante Textstellen  
+   - Bleiben Sie objektiv
+   - Antworten Sie prägnant
+
+tests: file://data/tests_qanda_lazy_context.csv

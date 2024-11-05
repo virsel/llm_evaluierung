@@ -1,0 +1,30 @@
+# yaml-language-server: $schema=https://promptfoo.dev/config-schema.json
+description: 'RAG - End to end test für Datenschutz und Compliance Chatbot'
+
+
+# Global provider configuration
+providers:
+  - file://retrieve_phi.py
+
+defaultTest:
+  options:
+    provider:
+      text: ollama:llama3.2:latest
+      embedding: ollama:embeddings:mxbai-embed-large
+  # vars:
+  #   context: file://retrieve_context_lazy.py 
+  assert:
+    - type: latency
+      threshold: 5000
+
+prompts:
+ - &basic_qanda |
+   Sie sind ein Assistent für Fragen und Antworten.
+   
+   Kontext: {{context}}
+   Frage: {{query}}
+   
+   Beantworten Sie die Frage präzise basierend auf dem gegebenen Kontext.
+   Verwenden Sie nur Informationen, die im Kontext enthalten sind.
+
+tests: file://data/tests_qanda_lazy_context.csv

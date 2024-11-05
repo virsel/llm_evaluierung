@@ -3,6 +3,7 @@ GermanQuAD: High-Quality German QA Dataset
 https://www.kaggle.com/datasets/thedevastator/germanquad-high-quality-german-qa-dataset
 
 ### Allgemein
+
 This RAG example allows you to ask questions over a number of public company SEC filings. It uses LangChain, but the flow is representative of any RAG solution.
 
 There are 3 parts:
@@ -38,3 +39,9 @@ promptfoo eval --config .\tests_llms.yaml
 Afterwards, you can view the results by running `promptfoo view`
 
 See `promptfooconfig.with-asserts.yaml` for a more complete example that compares the performance of two RAG configurations.
+
+### Notizen
+promptfoo collects basic anonymous telemetry by default. This telemetry helps us decide how to spend time on development.  
+To disable telemetry, set the following environment variable:  
+PROMPTFOO_DISABLE_TELEMETRY=1  
+https://www.promptfoo.dev/docs/configuration/telemetry/
