@@ -1,39 +1,44 @@
 import os
+import pandas as pd
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_community.document_loaders import PyPDFLoader
 from langchain_community.vectorstores import Chroma
 from langchain_community.embeddings import OllamaEmbeddings
+from langchain.schema import Document
 
 # Constants
-CHROMA_PATH = "db"
+CHROMA_PATH = "db_focus_qanda"
 model = "llama3.2:latest"
 model_url = "http://localhost:11434"
-dir_docs = "docs"
+DATA_PATH = "data/GermanQuAD.csv"
 
 # Initialize text splitter and embeddings
 text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
 embeddings = OllamaEmbeddings(model=model, base_url=model_url)
-all_chunks = []
 
-# Ensure the document directory exists
-if not os.path.isdir(dir_docs):
-    raise ValueError(f"The directory {dir_docs} does not exist.")
+# Check if the CSV file exists
+if not os.path.exists(DATA_PATH):
+    raise ValueError(f"The file {DATA_PATH} does not exist.")
 
-# Process each PDF file in the directory
-for pdf_file in os.listdir(dir_docs):
-    if pdf_file.endswith(".pdf"):
-        pdf_path = os.path.join(dir_docs, pdf_file)
-        print(f"Ingesting {pdf_file} from {pdf_path}...")
+print(f"Loading data from {DATA_PATH}...")
 
-        # Load PDF document from the local file
-        loader = PyPDFLoader(pdf_path)
-        pages = loader.load()
+# Read the CSV file
+df = pd.read_csv(DATA_PATH)
 
-        # Split the document into chunks
-        chunks = text_splitter.split_documents(pages)
-        all_chunks.extend(chunks)
+# Convert the context column into documents
+documents = []
+for i, row in df.iterrows():
+    doc = Document(
+        page_content=row['context'],
+        metadata={'source': f'row_{i}'}  # You can add more metadata fields if needed
+    )
+    documents.append(doc)
 
-# Embed all chunks and load them into the database
+print(f"Processing {len(documents)} documents...")
+
+# Split the documents into chunks
+chunks = text_splitter.split_documents(documents)
+
+# Embed chunks and load them into the database
 print("Embedding and saving chunks to Chroma database...")
-db_chroma = Chroma.from_documents(all_chunks, embeddings, persist_directory=CHROMA_PATH)
-print("Embedding complete.")
+db_chroma = Chroma.from_documents(chunks, embeddings, persist_directory=CHROMA_PATH)
+print(f"Embedding complete. Processed {len(chunks)} chunks.")

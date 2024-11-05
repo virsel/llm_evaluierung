@@ -1,3 +1,8 @@
+### Daten  
+GermanQuAD: High-Quality German QA Dataset   
+https://www.kaggle.com/datasets/thedevastator/germanquad-high-quality-german-qa-dataset
+
+### Allgemein
 This RAG example allows you to ask questions over a number of public company SEC filings. It uses LangChain, but the flow is representative of any RAG solution.
 
 There are 3 parts:
