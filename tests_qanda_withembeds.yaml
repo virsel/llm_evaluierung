@@ -1,5 +1,5 @@
 # yaml-language-server: $schema=https://promptfoo.dev/config-schema.json
-description: 'Generelle tests ohne LLM judge oder Nutzung von Embeddings'
+description: 'Tests mit LLM embeddings'
 
 
 # Global provider configuration
@@ -7,9 +7,13 @@ providers:
   - file://retrieve_phi.py
 
 defaultTest:
+  options:
+    provider:
+      embedding: ollama:embeddings:mxbai-embed-large
   assert:
-    - type: latency
-      threshold: 5000
+    - type: similar
+      value: "{{fact}}"
+      threshold: 0.7
 
 
 prompts:
@@ -21,9 +25,5 @@ prompts:
    
    Beantworten Sie die Frage präzise basierend auf dem gegebenen Kontext.
    Verwenden Sie nur Informationen, die im Kontext enthalten sind.
-# produktiv genügt:
-#  - &basic_qanda |
-#    {{query}}
-# da der Kontext bereits enthalten sein wird
 
 tests: file://data/tests_qanda_lazy_context.csv

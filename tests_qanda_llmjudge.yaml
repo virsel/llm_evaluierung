@@ -1,5 +1,5 @@
 # yaml-language-server: $schema=https://promptfoo.dev/config-schema.json
-description: 'RAG - End to end test für Datenschutz und Compliance Chatbot'
+description: 'Tests mit LLM judge'
 
 
 # Global provider configuration
@@ -10,15 +10,11 @@ defaultTest:
   options:
     provider:
       text: ollama:llama3.2:latest
-      embedding: ollama:embeddings:mxbai-embed-large
   # vars:
   #   context: file://retrieve_context_lazy.py 
   assert:
-    - type: answer-relevance # ensure that LLM output is related to original query
-      threshold: 0.9
-    - type: similar
+    - type: factuality
       value: "{{fact}}"
-      threshold: 0.7
 
 
 prompts:
