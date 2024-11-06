@@ -9,7 +9,7 @@ providers:
 defaultTest:
   options:
     provider:
-      text: ollama:llama3.2:latest
+      text: openai:chat
       embedding: ollama:embeddings:mxbai-embed-large
   assert:
     - type: answer-relevance # ensure that LLM output is related to original query

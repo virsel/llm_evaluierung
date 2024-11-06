@@ -9,7 +9,7 @@ providers:
 defaultTest:
   options:
     provider:
-      text: ollama:llama3.2:latest
+      text: openai:chat
   # vars:
   #   context: file://retrieve_context_lazy.py 
   assert:
@@ -17,7 +17,7 @@ defaultTest:
       value: "{{fact}}"
     - type: llm-rubric
       # Specify the criteria for grading the LLM output:
-      value: Is not apologetic and provides a clear, concise answer
+      value: Ist nicht entschuldigend und gibt eine klare, präzise Antwort
 
 
 prompts:
