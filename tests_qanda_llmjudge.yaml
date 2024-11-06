@@ -15,6 +15,9 @@ defaultTest:
   assert:
     - type: factuality
       value: "{{fact}}"
+    - type: llm-rubric
+      # Specify the criteria for grading the LLM output:
+      value: Is not apologetic and provides a clear, concise answer
 
 
 prompts:

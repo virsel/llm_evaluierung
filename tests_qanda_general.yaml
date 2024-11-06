@@ -10,6 +10,8 @@ defaultTest:
   assert:
     - type: latency
       threshold: 5000
+    - type: python
+      value: file://assert_answerlength.py
 
 
 prompts:
@@ -21,6 +23,9 @@ prompts:
    
    Beantworten Sie die Frage präzise basierend auf dem gegebenen Kontext.
    Verwenden Sie nur Informationen, die im Kontext enthalten sind.
+   Fassen Sie sich kurz so dass die Antwort weniger als 300 Zeichen enthält.
+
+
 # produktiv genügt:
 #  - &basic_qanda |
 #    {{query}}
