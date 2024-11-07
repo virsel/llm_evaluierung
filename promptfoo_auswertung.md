@@ -13,8 +13,6 @@
 
 - 100% Open Source
 
-- Große Community
-
 - Tests werden in `yaml` configs konfiguriert
     - So wird eine sinnvolle Struktur vorgegeben 
     - mit wenig Programmieraufwand lassen sich komplexe Tests ausführen
@@ -24,9 +22,9 @@
 
 - das Implementieren von benutzerdefinierten Metriken ist einfach möglich
 
-- Anbindung verschiedenster LLM Endpunkte einfach möglich (z.b. genügt "ollama:llama3.2:latest" um auf das Modell zuzugreifen)
-
 - sehr gut Dokumentiert, viele Beispiele vorhanden ([Github](https://github.com/promptfoo/promptfoo/tree/main/examples))
+
+- Anbindung verschiedenster LLM Endpunkte einfach möglich (z.b. genügt "ollama:llama3.2:latest" um auf das Modell zuzugreifen)
 
 ## Nachteile:
 
@@ -34,9 +32,16 @@
 
 - Einarbeitung in vorgesehene yaml syntax notwendig
 
+## Fazit
+Sehr gut für grundlegende Tests in Dev-Phase.
+Gute Auswertbarkeit der Ergebnisse mittels UI.
+Durch wenig Programmieroverhead kommt man schnell zu gewünschten Ergebnissen.
+
 # DeepEval (3.7k Githubsterne)
 
 ## Vorteile
+- Echtzeit Evaluation in Produktion möglich
+
 - viele vordefinierte Metriken
     - exklusiv: 
         - Conversational (https://docs.confident-ai.com/docs/metrics-conversation-completeness)
@@ -55,4 +60,10 @@
 
 - komplexe Tests schwierig Umsetzbar (z.b. Vergleich von mehreren Prompts)
     - oft deutlich mehr Code als bei promptfoo notwendig
+
+## Fazit
+
+Weniger gut geeignet für die Dev-Phase, da mit mehr Programmieroverhead verbunden + keine frei verwendbare Visualisierungsmöglichkeit der Ergebnisse vorhanden.
+Metrikfunktionen aber als Allrounder sowohl in Dev-Phase als auch Produktivphase verwendbar.
+Diese lassen sich auch in einer Promptfoo-Dev-Phase einbinden.
 
