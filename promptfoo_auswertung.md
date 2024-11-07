@@ -47,8 +47,12 @@
 
 - mit Hilfe von Confident AI lassen sich hilfreiche Visualisierungen umsetzen
 
+- viele Beispiele ([Github](https://github.com/confident-ai/deepeval/tree/main/examples))
+
 ## Nachteile
 - für Visualierung Confident AI Login notwendig
     - kein Self-Hosting möglich
-    
-- wenig Beispiele ([Github](https://github.com/confident-ai/deepeval/tree/main/examples))
+
+- komplexe Tests schwierig Umsetzbar (z.b. Vergleich von mehreren Prompts)
+    - oft deutlich mehr Code als bei promptfoo notwendig
+
