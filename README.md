@@ -38,6 +38,11 @@ promptfoo eval --config .\tests_rag.yaml
 
 Afterwards, you can view the results by running `promptfoo view`
 
+### Debugging
+
+Das debuggen von Python-Code ist komplex und kann so gelöst werden:
+https://www.promptfoo.dev/docs/usage/troubleshooting/#debugging-python
+
 
 ### Notizen
 promptfoo collects basic anonymous telemetry by default. This telemetry helps us decide how to spend time on development.  

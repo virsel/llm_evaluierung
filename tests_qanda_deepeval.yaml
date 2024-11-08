@@ -1,0 +1,33 @@
+# yaml-language-server: $schema=https://promptfoo.dev/config-schema.json
+description: 'Generelle tests ohne LLM judge oder Nutzung von Embeddings'
+
+
+# Global provider configuration
+providers:
+  - file://retrieve_phi.py
+
+defaultTest:
+  assert:
+    - type: python
+      value: file://asserts/assert_deepeval_hallu.py
+      threshold: 0.2  # specify the threshold here
+
+
+prompts:
+ - &basic_qanda |
+   Sie sind ein Assistent für Fragen und Antworten.
+   
+   Kontext: {{context}}
+   Frage: {{query}}
+   
+   Beantworten Sie die Frage präzise basierend auf dem gegebenen Kontext.
+   Verwenden Sie nur Informationen, die im Kontext enthalten sind.
+   Fassen Sie sich kurz so dass die Antwort weniger als 300 Zeichen enthält.
+
+
+# produktiv genügt:
+#  - &basic_qanda |
+#    {{query}}
+# da der Kontext bereits enthalten sein wird
+
+tests: file://data/tests_qanda_lazy_context.csv
